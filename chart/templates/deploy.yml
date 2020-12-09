@@ -1,0 +1,18 @@
+service: {{ .Values.name}}
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: {{ .Values.runtime }}
+  region: {{ .Values.region }}
+  iamRoleStatements:
+    {{- include "chart.list-resources" .| indent 7 }}
+functions:
+  {{ .Values.handler }}:
+    handler: {{ .Values.handler }}.handler
+    events:
+      - http:
+          path: /{{ .Values.routepath}}
+          method: get
+plugins:
+  - serverless-python-requirements
